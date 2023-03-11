@@ -20,5 +20,24 @@ Output: 2, 1
 from typing import List, Tuple
 
 
-def major_and_minor_elem(inp: List) -> Tuple[int, int]:
-    ...
+def major_and_minor_elem(inp:List) -> Tuple[int, int]:
+    candidate, count = None, 0
+    for x in inp:
+        if count == 0:
+            candidate = x
+            count = 1
+        elif x == candidate:
+            count += 1
+        else:
+            count -= 1
+    most_common = candidate
+    
+    freq = {}
+    for x in inp:
+        if x in freq:
+            freq[x] += 1
+        else:
+            freq[x] = 1
+    least_common = list(freq.keys())[list(freq.values()).index(min(freq.values()))]
+    
+    return most_common, least_common
