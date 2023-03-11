@@ -26,6 +26,6 @@ from typing import Dict, List
 def transform(legacy_data: Dict[int, List[str]]) -> Dict[str, int]:
     new_format_dict = {}
     for k,v in legacy_data.items():
-        for x in range(0, len(v)):
-            new_format_dict[v[x].lower()] = k
+        for x in v:
+            new_format_dict[x.lower()] = k
     return new_format_dict
