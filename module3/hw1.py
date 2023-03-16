@@ -29,18 +29,36 @@ foo@example.com 729.83 EUR accountName 2021-01:0 validate_date
 bar@example.com 729.83 accountName 2021-01-02 validate_line
 """
 from typing import Callable, Iterable
+import os
 
 
 def validate_line(line: str) -> bool:
-    for words in line:
-        if len(words) == 5:
-            return True
-    return False
+    if len(line.split()) == 5:
+        return True
+    else:
+        return False
 
 
 def validate_date(date: str) -> bool:
-    ...
+    if len(date) == 10 and date[4] == date[7] == '-' and date[:4].isdigit() and date[5:7].isdigit() and date[8:].isdigit():
+        return True
+    else: 
+        return False
 
 
 def check_data(filepath: str, validators: Iterable[Callable]) -> str:
-    ...
+    report_path = os.path.abspath("report.txt")
+
+    with open(os.path.abspath(filepath), "r") as f, open(report_path, "w") as report:
+        for line in f:
+            errors = []
+            elements = line.strip().split()
+            if not validate_line(line):
+                errors.append("validate_line")
+            else:
+                if not validate_date(elements[4]):
+                    errors.append("validate_date")
+
+            if errors:
+                report.write(f"{line.strip()} {' '.join(errors)}\n")
+    return report_path

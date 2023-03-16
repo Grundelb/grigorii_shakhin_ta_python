@@ -13,10 +13,6 @@ assert val_1 is val_2
 from collections.abc import Callable
 
 def cache(func: Callable) -> Callable:
-    '''
-    The wrapper function first checks whether the arguments are already in the cache. If they are, it returns the cached result. 
-    Otherwise, it calls the original function func with the given arguments and stores the result in the cache before returning it.
-    '''
     cache_dict = {}
 
     def wrapper(*args):
