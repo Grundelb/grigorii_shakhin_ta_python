@@ -22,3 +22,71 @@ Homework is solved if solution has more than 5 symbols.
 Check file with tests to see how all these classes are used. You can create any additional classes 
 you want.
 """
+
+import datetime
+
+class DeadlineError(Exception):
+    pass
+
+class Homework:
+    
+    def __init__(self, hw_text, deadline):
+        self.hw_text = hw_text
+        self.deadline = deadline
+
+    def is_active(self):
+        return datetime.datetime.now() < self.deadline
+
+class HomeworkResult:
+    
+    def __init__(self, author, homework, solution):
+        self.author = author
+        self.homework = homework
+        self.solution = solution
+
+    def __str__(self):
+        return f"{self.solution}"
+
+class Student:
+    
+    def __init__(self, last_name, first_name):
+        self.last_name = last_name
+        self.first_name = first_name
+
+    def do_homework(self, homework, solution):
+        if homework.is_active():
+            return HomeworkResult(self, homework, solution)
+        else:
+            raise DeadlineError("You are late")
+
+class Teacher:
+    
+    homework_done = {}
+    
+    def __init__(self, lastname, firstname):
+        self.lastname = lastname
+        self.firstname = firstname
+
+    @classmethod
+    def create_homework(cls, text, days):
+        deadline = datetime.datetime.now() + datetime.timedelta(days = days)
+        homework = Homework(text, deadline)
+        return homework
+
+    @classmethod
+    def check_homework(cls, homework_result):
+        if len(homework_result.solution) > 5:
+            if homework_result.homework not in cls.homework_done:
+                cls.homework_done[homework_result.homework] = []
+            if homework_result.solution not in cls.homework_done[homework_result.homework]:
+                cls.homework_done[homework_result.homework].append(str(homework_result.solution))
+            return True
+        else:
+            return False
+
+    @classmethod
+    def reset_results(cls, homework=None):
+        if homework is not None:
+            cls.homework_done[homework] = []
+        else:
+            cls.homework_done = {}
