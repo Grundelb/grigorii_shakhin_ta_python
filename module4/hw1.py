@@ -46,6 +46,9 @@ class HomeworkResult:
 
     def __str__(self):
         return f"{self.solution}"
+    
+    def __len__(self):
+        return len(self.solution)
 
 class Student:
     
@@ -71,6 +74,8 @@ class Teacher:
     def create_homework(cls, text, days):
         deadline = datetime.datetime.now() + datetime.timedelta(days = days)
         homework = Homework(text, deadline)
+        if homework not in cls.homework_done:
+                cls.homework_done[homework] = []
         return homework
 
     @classmethod
@@ -78,8 +83,8 @@ class Teacher:
         if len(homework_result.solution) > 5:
             if homework_result.homework not in cls.homework_done:
                 cls.homework_done[homework_result.homework] = []
-            if homework_result.solution not in cls.homework_done[homework_result.homework]:
-                cls.homework_done[homework_result.homework].append(str(homework_result.solution))
+            if homework_result not in cls.homework_done[homework_result.homework]:
+                cls.homework_done[homework_result.homework].append(homework_result)
             return True
         else:
             return False
