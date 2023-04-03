@@ -7,6 +7,8 @@ def merge_elems(*args):
     for arg in args:
         if hasattr(arg, '__iter__') and not isinstance(arg, str):
             yield from merge_elems(*arg)
+        elif isinstance(arg, str) and len(arg) > 1:
+            yield from merge_elems(list(arg))
         else:
             yield arg
 
