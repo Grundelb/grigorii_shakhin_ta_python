@@ -18,9 +18,7 @@ Part 2: Manipulating with Database
 from typing import List
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
@@ -33,7 +31,7 @@ class Film(Base):
     release_year = Column(Integer)
 
 
-engine = create_engine('mysql+mysqlconnector://root:Password1@localhost/films_db', echo=True)
+engine = create_engine('sqlite:///films.db', echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 Base.metadata.create_all(engine)
