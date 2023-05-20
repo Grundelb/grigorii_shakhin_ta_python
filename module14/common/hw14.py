@@ -1,4 +1,3 @@
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,15 +10,8 @@ class DemoblizeHomePage:
     user_password = 'Password1'
     highest_price_element = []
 
-    def __init__(self) -> None:
-        pass
-
-    def set_up(self):
-        self.driver = webdriver.Chrome()
-        self.driver.maximize_window()
-
-    def tear_down(self):
-        self.driver.quit()
+    def __init__(self, driver) -> None:
+        self.driver = driver
 
     def open_home_page(self):
         self.driver.get(self.base_url)
@@ -85,10 +77,13 @@ class DemoblizeHomePage:
             WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, 'h2.name'))
             )
-            return highest_price_product_name, highest_price_product_price
+            return {'name': highest_price_product_name, 'price' : highest_price_product_price}
         
     def get_highest_price_monitor_card_info(self):
-        return self.driver.find_element(By.CSS_SELECTOR, 'h2.name').text, self.driver.find_element(By.CSS_SELECTOR, 'h3.price-container').text.split()[0]
+        name = self.driver.find_element(By.CSS_SELECTOR, 'h2.name').text
+        price = self.driver.find_element(By.CSS_SELECTOR, 'h3.price-container').text.split()[0]
+        return {'name': name, 'price': price}
+
 
     def add_to_cart(self):
         self.driver.find_element(By.XPATH, '//a[text() = "Add to cart"]').click()
