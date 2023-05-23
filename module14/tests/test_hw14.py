@@ -1,13 +1,4 @@
 from module14.common.hw14 import DemoblizeHomePage
-from selenium import webdriver
-import pytest
-
-@pytest.fixture(scope='function')
-def driver():
-    _driver = webdriver.Chrome()
-    _driver.maximize_window()
-    yield _driver
-    _driver.quit()
 
 def test_login(driver):
     test_page = DemoblizeHomePage(driver)
@@ -22,15 +13,7 @@ def test_login(driver):
     assert test_page.get_logout_button().is_displayed(), 'Logout button is not displayed'
     assert test_page.get_welcome_message().text == f'Welcome {test_page.user_login}'
 
-@pytest.fixture
-def login(driver):
-    test_page = DemoblizeHomePage(driver)
-    test_page.open_home_page()
-    test_page.open_log_in_form()
-    test_page.log_in()
-
 def test_add_monitor_with_highest_price(driver, login):
-    login
     test_page = DemoblizeHomePage(driver)
     test_page.open_monitors_category()
     
