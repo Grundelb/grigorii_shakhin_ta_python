@@ -1,17 +1,21 @@
 *** Settings ***
 Library    SeleniumLibrary
-Suite Teardown    Close All Browsers
+Library    custom_keywords.py
+
+Test Setup     Run Keywords
+...    ${driver} Open Browser    https://www.demoblaze.com/    Chrome 
+...    AND    Set Selenium Speed    0.5s
+...    AND    Maximize Browser Window                  
+Test Teardown    Close All Browsers
 
 *** Variables ***
+${driver}
 ${user_login}    gryundelb@gmail.com
 ${user_password}    Password1
 
 *** Test Cases ***
 Test Login
     [Tags]    screenshot
-    Open Browser    https://www.demoblaze.com/    Chrome
-    Set Selenium Speed    0.5s
-    Maximize Browser Window
     Click Login Button
     Wait Until Element Is Visible    css=#loginusername
     Wait Until Element Is Visible    css=#loginpassword
@@ -23,15 +27,12 @@ Test Login
 
 Test Add Product To Cart
     [Tags]    screenshot
-    Open Browser    https://www.demoblaze.com/    Chrome
-    Set Selenium Speed    0.5s
-    Maximize Browser Window
     Click Login Button
     Wait Until Element Is Visible    css=#loginusername
     Wait Until Element Is Visible    css=#loginpassword
     Log In
     Open Monitors Category
-    ${product_info}=    Get Highest Price Monitor
+     ${product_info}=    Get Highest Price Monitor
     Click Add To Cart Button
     Click Cart Button
     Wait Until Element Is Visible    css=.success
@@ -52,36 +53,14 @@ Click Login Button
 Open Monitors Category
     Click Link    //a[text()='Monitors']
 
-Get Highest Price Monitor
-    Wait Until Element Is Visible    xpath=//*[text()='$400']    timeout=10s
-    ${products}    Get WebElements    css=.card
-    ${highest_price}    Set Variable    -1
-    ${highest_price_product}    Set Variable    None
-    FOR    ${product}    IN    @{products}
-        ${product}    Get Text    xpath=.//h5
-        ${price}    Convert To Number    ${product[1:]}
-        IF    ${price} > ${highest_price}
-            ${highest_price}    Set Variable    ${price}
-            ${highest_price_product}    Set Variable    ${product}
-        END
-    END
-    IF    ${highest_price_product} is not ${None}
-        ${highest_price_product_name}    Get Text    xpath=${highest_price_product}//h4
-        ${highest_price_product_price}    Get Text    xpath=${highest_price_product}//h5
-        Click Element    xpath=${highest_price_product}//h4
-        Wait Until Element Is Visible    css=h2.name    timeout=10s
-        ${result}    Create Dictionary    name=${highest_price_product_name}    price=${highest_price_product_price[1:]}
-        [Return]    ${result}
-    END
-
 Click Add To Cart Button
-    Click Button    //a[text()='Add to cart']
+    Click Link    //a[text()='Add to cart']
     Handle Alert    ACCEPT
 
 Click Cart Button
-    Click Button    css=#cartur
+    Click link    css=#cartur
 
 Get Product Info
-    ${name} =    Get Text    css=h2.name
-    ${price} =    Get Text    xpath=//div[@class='card h-100']//h5
+    ${name} =    Get Text    xpath=.//td[2]
+    ${price} =    Get Text    xpath=.//td[3]
     [Return]    ${name}    ${price}
