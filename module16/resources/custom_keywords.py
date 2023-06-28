@@ -28,10 +28,8 @@ def get_highest_price_monitor():
     if highest_price_product is not None:
         highest_price_product_name = highest_price_product.find_element(By.XPATH, './/h4').text
         highest_price_product_price = highest_price_product.find_element(By.XPATH, './/h5').text
-        # Update the line below based on your requirements
-        highest_price_element.append((highest_price_product_name, highest_price_product_price[1:]))
         highest_price_product.find_element(By.XPATH, './/h4').click()
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, 'h2.name'))
         )
-        return {'name': highest_price_product_name, 'price': highest_price_product_price}
+        return {'name': highest_price_product_name, 'price': highest_price_product_price[1:]}
